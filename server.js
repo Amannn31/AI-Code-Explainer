@@ -1,69 +1,83 @@
-contents: `
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const { GoogleGenAI } = require("@google/genai");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static("public"));
+
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+});
+
+app.post("/explain", async (req, res) => {
+
+    const { code } = req.body;
+
+    if (!code) {
+        return res.status(400).json({
+            answer: "Please provide some code."
+        });
+    }
+
+    try {
+
+        const response = await ai.models.generateContent({
+
+            model: "gemini-2.5-flash",
+
+            contents: `
 You are a programming teacher.
 
-Your job is to explain code exactly like you are teaching a beginner who has never coded before.
+Explain the following code in very simple English.
 
-VERY IMPORTANT RULES:
-
-- Use very simple English.
-- Explain EVERY important line separately.
-- Explain WHY each line is written.
-- Do NOT use difficult words.
-- Keep every explanation under 2 lines.
-- Never write long paragraphs.
-- Use emojis.
+Rules:
+- Explain like you are teaching a complete beginner.
+- Explain every important line separately.
+- Use bullet points.
+- Keep every point short.
+- Never use difficult English.
+- Explain why each line is written.
+- If removed, explain what happens.
 - Use markdown.
 
-Return ONLY in this format.
+Return exactly in this format.
 
 # 🚀 Program Summary
 
-Explain what the whole program does in 2-3 simple lines.
+Explain the program in 2-3 simple sentences.
 
 ---
 
 # 📝 Line by Line Explanation
 
-For EVERY important line write like this:
+For every important line use this format.
 
 ### Line 1
 
-Code:
+Code
 
 \`\`\`cpp
 #include<iostream>
 \`\`\`
 
-Explanation:
+Explanation
 
-• Includes the input/output library.
+• What this line does.
 
-• It allows us to use cout and cin.
+• Why it is needed.
 
-• Without this line the program cannot print anything.
-
----
-
-### Line 2
-
-Code:
-
-\`\`\`cpp
-using namespace std;
-\`\`\`
-
-Explanation:
-
-• Lets us use cout instead of std::cout.
-
-• Makes the code shorter and easier to write.
+• What happens if removed.
 
 ---
 
-### Continue for every important line.
+Continue for all important lines.
 
 Explain:
-
 - #include
 - using namespace std
 - int main()
@@ -73,23 +87,13 @@ Explain:
 - functions
 - return statement
 
-Do NOT skip any important line.
-
 ---
 
 # ▶ Dry Run
 
-Show every step in a table.
+Show step-by-step variable changes.
 
-Example:
-
-| Step | i | sum |
-|------|---|-----|
-|1|1|1|
-|2|2|3|
-|3|3|6|
-
-If there is no loop, simply write:
+If there is no loop, write:
 
 No dry run required.
 
@@ -97,27 +101,19 @@ No dry run required.
 
 # 📤 Output
 
-Write only the output.
+Show only the output.
 
 ---
 
 # ⏱ Time Complexity
 
-Write only:
-
-O(...)
-
-Then explain in one short sentence.
+Write complexity and one short reason.
 
 ---
 
 # 💾 Space Complexity
 
-Write only:
-
-O(...)
-
-Then explain in one short sentence.
+Write complexity and one short reason.
 
 ---
 
@@ -125,9 +121,30 @@ Then explain in one short sentence.
 
 Give exactly 3 simple improvements.
 
-Use bullet points.
-
 Code:
 
 ${code}
 `
+        });
+
+        res.json({
+            answer: response.text
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            answer: "Something went wrong!"
+        });
+
+    }
+
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
