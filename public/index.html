@@ -1,26 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Code Explainer</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
+
 <body>
 
-    <h1>AI Code Explainer</h1>
+    <div class="container">
 
-    <textarea id="code" rows="15" placeholder="Paste your C++, Java, Python code here..."></textarea>
+        <header>
 
-    <br><br>
+            <div class="top-bar">
 
-    <button onclick="explainCode()">Explain Code</button>
+                <h1>
+                    <i class="fa-solid fa-code"></i>
+                    AI Code Explainer
+                </h1>
 
-    <h2>Output</h2>
+                <button id="themeBtn" onclick="toggleTheme()">
+                    <i class="fa-solid fa-moon"></i>
+                    Dark Mode
+                </button>
 
-    <pre id="output"></pre>
+            </div>
 
+            <p>
+                Paste your C++, Java, Python or JavaScript code and get a detailed explanation powered by Gemini AI.
+            </p>
+
+        </header>
+
+        <div class="main">
+
+            <!-- Left Card -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        <i class="fa-solid fa-laptop-code"></i>
+                        Your Code
+                    </h2>
+
+                    <span id="counter">0 / 5000</span>
+
+                </div>
+
+                <textarea
+                    id="code"
+                    maxlength="5000"
+                    spellcheck="false"
+                    placeholder="Paste your code here..."></textarea>
+
+                <div class="buttons">
+
+                    <button class="clear-btn" onclick="clearCode()">
+                        <i class="fa-solid fa-trash"></i>
+                        Clear
+                    </button>
+
+                    <button class="explain-btn" onclick="explainCode()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        Explain Code
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Right Card -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        <i class="fa-solid fa-robot"></i>
+                        Explanation
+                    </h2>
+
+                    <button id="copyBtn" onclick="copyOutput()">
+                        <i class="fa-regular fa-copy"></i>
+                        Copy
+                    </button>
+
+                </div>
+
+                <div id="output" class="output-box">
+
+    <div class="empty-state">
+
+        <i class="fa-solid fa-robot"></i>
+
+        <h3>Ready to Explain</h3>
+
+        <p>
+            Paste your code on the left and click
+            <b>Explain Code</b>.
+        </p>
+
+    </div>
+
+</div>
+
+            </div>
+
+        </div>
+
+        <footer>
+        🚀 Built by Aman Kumar | Powered by Google Gemini AI
+        </footer>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 
 </body>
+
 </html>
